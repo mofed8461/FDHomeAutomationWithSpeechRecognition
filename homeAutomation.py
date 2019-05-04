@@ -32,7 +32,7 @@ r = sr.Recognizer()
 ##mic = sr.Microphone(device_index=2)
 
 ## r.adjust_for_ambient_noise(source)
-
+lastPassword = ""
 try:
 	while True:
 		os.system('/usr/bin/arecord --duration=5 -r 16000 -f S16_LE /home/pi/Desktop/temp.wav')
@@ -57,7 +57,7 @@ try:
 		print(text)
 		understood = False
 
-		if ('door' in text and 'open' in text):
+		if ('door' in text and 'open' in text and lastPassword == "parachute"):
 			pwmServo.ChangeDutyCycle(doorOpened)
 			understood = True
 
@@ -84,6 +84,7 @@ try:
 				understood = True
 
 		if (understood == False and text != 'error2'):
+			lastPassword = text
 			GPIO.output(ledPin, False)
 			time.sleep(0.2)
 			GPIO.output(ledPin, True)
